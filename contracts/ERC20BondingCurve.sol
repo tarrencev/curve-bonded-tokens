@@ -8,7 +8,7 @@ import "./BondingCurve.sol";
  * @title Token Bonding Curve
  * @dev Token backed Bonding curve contract
  */
-contract TokenBondingCurve is BondingCurve {
+contract ERC20BondingCurve is BondingCurve {
 
   /* Reserve Token */
   ERC20 public reserveToken;
