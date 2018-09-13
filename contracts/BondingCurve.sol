@@ -11,7 +11,7 @@ import "./BancorFormula.sol";
  * https://github.com/bancorprotocol/contracts
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
-contract EthBondingCurve is ERC20, BancorFormula, Ownable {
+contract BondingCurve is ERC20, BancorFormula, Ownable {
   uint256 public poolBalance;
 
   /*
@@ -33,47 +33,52 @@ contract EthBondingCurve is ERC20, BancorFormula, Ownable {
   */
   uint256 public gasPrice = 0 wei; // maximum gas price for bancor transactions
 
-  event LogCurvedMint(address sender, uint256 amountMinted, uint256 totalCost);
-  event LogCurvedBurn(address sender, uint256 amountWithdrawn, uint256 returnAmount);
-
-  /**
-   * @dev Buy tokens
-   * gas ~ 77825
-   * TODO implement maxAmount that helps prevent miner front-running
-   */
-  function _curvedMint(uint256 reserveAmount) validGasPrice internal returns (uint256) {
-    uint256 tokensToMint = calculatePurchaseReturn(totalSupply(), poolBalance, reserveRatio, reserveAmount);
-    _mint(msg.sender, tokensToMint);
-    poolBalance = poolBalance.add(reserveAmount);
-    emit LogCurvedMint(msg.sender, tokensToMint, reserveAmount);
-  }
+  event CurvedMint(address sender, uint256 amount, uint256 deposit);
+  event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {
     return calculatePurchaseReturn(totalSupply(), poolBalance, reserveRatio, amount);
   }
 
-  /**
-   * @dev Sell tokens
-   * gas ~ 86936
-   * @param amount Amount of tokens to withdraw
-   * TODO implement maxAmount that helps prevent miner front-running
-   */
-  function _curvedBurn(uint256 burnAmount) validGasPrice internal returns (uint256) {
-    require(burnAmount > 0 && balanceOf(msg.sender) >= burnAmount);
-    uint256 returnAmount = calculateSaleReturn(totalSupply(), poolBalance, reserveRatio, burnAmount);
-    poolBalance = poolBalance.sub(returnAmount);
-    _burn(msg.sender, burnAmount);
-    emit LogCurvedBurn(msg.sender, burnAmount, returnAmount);
-    return returnAmount;
+  function calculateCurvedBurnReturn(uint256 amount) public view returns (uint256) {
+    return calculateSaleReturn(totalSupply(), poolBalance, reserveRatio, amount);
   }
 
-  function calculateBurnReturn(uint256 burnAmount) public view returns (uint256) {
-    return calculateSaleReturn(totalSupply(), poolBalance, reserveRatio, burnAmount);
+  /**
+   * @dev Mint tokens
+   */
+  function _curvedMint(uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
+    uint256 amount = calculateCurvedMintReturn(deposit);
+    _mint(msg.sender, amount);
+    poolBalance = poolBalance.add(deposit);
+    emit CurvedMint(msg.sender, amount, deposit);
+  }
+
+  /**
+   * @dev Burn tokens
+   * @param amount Amount of tokens to withdraw
+   */
+  function _curvedBurn(uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
+    uint256 reimbursement = calculateCurvedBurnReturn(amount);
+    poolBalance = poolBalance.sub(reimbursement);
+    _burn(msg.sender, amount);
+    emit CurvedBurn(msg.sender, amount, reimbursement);
+    return reimbursement;
   }
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
     assert(tx.gasprice <= gasPrice);
+    _;
+  }
+
+  modifier validBurn(uint256 amount) {
+    require(amount > 0 && balanceOf(msg.sender) >= amount);
+    _;
+  }
+
+  modifier validMint(uint256 amount) {
+    require(amount > 0);
     _;
   }
 

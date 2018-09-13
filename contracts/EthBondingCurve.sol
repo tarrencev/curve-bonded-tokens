@@ -25,7 +25,7 @@ contract EthBondingCurve is BondingCurve {
   /**
    * @dev Burn tokens
    *
-   * @param amount Amount of tokens to withdraw
+   * @param amount Amount of tokens to burn
    */
   function burn(uint256 amount) public {
     uint256 returnAmount = _curvedBurn(amount);
