@@ -1,0 +1,11 @@
+{
+  "name": "curve-bonded-tokens",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarrencev/curve-bonded-tokens.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "openzeppelin-solidity": "^2.0.0-rc.1"
+  }
+}
