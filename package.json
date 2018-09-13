@@ -1,9 +1,24 @@
 {
   "name": "curve-bonded-tokens",
+  "version": "0.1.0",
+  "files": [
+    "build",
+    "contracts",
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tarrencev/curve-bonded-tokens.git"
   },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "security",
+    "zeppelin"
+  ],
+  "author": "Tarrence van As <tarrence@commoninterest.io>",
   "license": "MIT",
   "devDependencies": {
     "openzeppelin-solidity": "^2.0.0-rc.1"
