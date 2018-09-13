@@ -1,5 +1,7 @@
 # curve-bonded-tokens
 
+*** These contracts have not been audited, use at your own risk ***
+
 Curve Bonded tokens based on the Bancor Formula and OpenZeppelin contracts
 
 ### Install
