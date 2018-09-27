@@ -52,6 +52,7 @@ contract BondingCurve is ERC20, BancorFormula, Ownable {
     _mint(msg.sender, amount);
     poolBalance = poolBalance.add(deposit);
     emit CurvedMint(msg.sender, amount, deposit);
+    return amount;
   }
 
   /**
