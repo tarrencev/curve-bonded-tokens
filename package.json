@@ -20,7 +20,8 @@
   ],
   "author": "Tarrence van As <tarrence@commoninterest.io>",
   "license": "MIT",
-  "devDependencies": {
-    "openzeppelin-solidity": "^2.0.0-rc.1"
+  "devDependencies": {},
+  "dependencies": {
+    "openzeppelin-zos": "github:OpenZeppelin/openzeppelin-zos"
   }
 }
