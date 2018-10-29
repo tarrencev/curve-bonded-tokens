@@ -202,7 +202,7 @@ limitations under the License. */
 
 pragma solidity ^0.4.24;
 
-import "openzeppelin-zos/contracts/math/SafeMath.sol";
+import "openzeppelin-eth/contracts/math/SafeMath.sol";
 
 import "./math/Power.sol";
 

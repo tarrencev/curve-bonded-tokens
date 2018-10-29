@@ -37,7 +37,7 @@ ERC20-backed curve bonded token:
 ```
 pragma solidity ^0.4.24;
 
-import "openzeppelin-zos/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
 import "curve-bonded-tokens/contracts/ERC20BondingCurve.sol";
 
 contract Token is ERC20BondingCurve {

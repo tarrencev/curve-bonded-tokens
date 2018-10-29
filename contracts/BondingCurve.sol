@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-zos/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-zos/contracts/ownership/Ownable.sol";
+import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-eth/contracts/ownership/Ownable.sol";
 import "./BancorFormula.sol";
 
 /**
