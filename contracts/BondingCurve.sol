@@ -1,7 +1,6 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-eth/contracts/ownership/Ownable.sol";
 import "./BancorFormula.sol";
 
 /**
@@ -11,7 +10,7 @@ import "./BancorFormula.sol";
  * https://github.com/bancorprotocol/contracts
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
-contract BondingCurve is ERC20, BancorFormula, Ownable {
+contract BondingCurve is ERC20, BancorFormula {
   uint256 public poolBalance;
 
   /*
@@ -95,7 +94,7 @@ contract BondingCurve is ERC20, BancorFormula, Ownable {
     @dev Allows the owner to update the gas price limit
     @param _gasPrice The new gas price limit
   */
-  function setGasPrice(uint256 _gasPrice) onlyOwner public {
+  function _setGasPrice(uint256 _gasPrice) internal {
     require(_gasPrice > 0);
     gasPrice = _gasPrice;
   }
