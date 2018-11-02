@@ -47,11 +47,15 @@ contract BondingCurve is ERC20, BancorFormula, Ownable {
   /**
    * @dev Mint tokens
    */
-  function _curvedMint(uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
+  function _curvedMint(uint256 deposit) internal returns (uint256) {
+    return _curvedMintFor(msg.sender, deposit);
+  }
+
+  function _curvedMintFor(address user, uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
     uint256 amount = calculateCurvedMintReturn(deposit);
-    _mint(msg.sender, amount);
+    _mint(user, amount);
     poolBalance = poolBalance.add(deposit);
-    emit CurvedMint(msg.sender, amount, deposit);
+    emit CurvedMint(user, amount, deposit);
     return amount;
   }
 
@@ -59,11 +63,15 @@ contract BondingCurve is ERC20, BancorFormula, Ownable {
    * @dev Burn tokens
    * @param amount Amount of tokens to withdraw
    */
-  function _curvedBurn(uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
+  function _curvedBurn(uint256 amount) internal returns (uint256) {
+    return _curvedBurnFor(msg.sender, amount);
+  }
+
+  function _curvedBurnFor(address user, uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
     uint256 reimbursement = calculateCurvedBurnReturn(amount);
     poolBalance = poolBalance.sub(reimbursement);
-    _burn(msg.sender, amount);
-    emit CurvedBurn(msg.sender, amount, reimbursement);
+    _burn(user, amount);
+    emit CurvedBurn(user, amount, reimbursement);
     return reimbursement;
   }
 
