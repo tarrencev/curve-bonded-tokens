@@ -89,7 +89,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   /**
    * @dev Abstract method that returns pool balance
    */
-  function poolBalance() external returns (uint256);
+  function poolBalance() public returns (uint256);
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
