@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
+import "zos-lib/contracts/Initializable.sol";
 
 import "./BondingCurve.sol";
 
@@ -8,10 +9,14 @@ import "./BondingCurve.sol";
  * @title Token Bonding Curve
  * @dev Token backed Bonding curve contract
  */
-contract ERC20BondingCurve is BondingCurve {
+contract ERC20BondingCurve is Initializable, BondingCurve {
 
   /* Reserve Token */
   ERC20 public reserveToken;
+
+  function initialize(uint256 _gasPrice) initializer public {
+    BondingCurve.initialize(_gasPrice);
+  }
 
   /**
    * @dev Mint tokens

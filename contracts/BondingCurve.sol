@@ -1,6 +1,8 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
+import "zos-lib/contracts/Initializable.sol";
+
 import "./BancorFormula.sol";
 
 /**
@@ -10,7 +12,7 @@ import "./BancorFormula.sol";
  * https://github.com/bancorprotocol/contracts
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
-contract BondingCurve is ERC20, BancorFormula {
+contract BondingCurve is Initializable, ERC20, BancorFormula {
   uint256 public poolBalance;
 
   /*
@@ -34,6 +36,10 @@ contract BondingCurve is ERC20, BancorFormula {
 
   event CurvedMint(address sender, uint256 amount, uint256 deposit);
   event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
+
+  function initialize(uint256 _gasPrice) initializer public {
+    gasPrice = _gasPrice;
+  }
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {
     return calculatePurchaseReturn(totalSupply(), poolBalance, reserveRatio, amount);
@@ -76,7 +82,7 @@ contract BondingCurve is ERC20, BancorFormula {
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
-    assert(gasPrice == 0 wei || tx.gasprice <= gasPrice);
+    assert(tx.gasprice <= gasPrice);
     _;
   }
 

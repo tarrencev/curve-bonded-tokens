@@ -1,12 +1,18 @@
 pragma solidity ^0.4.24;
 
 import "./BondingCurve.sol";
+import "zos-lib/contracts/Initializable.sol";
 
 /**
  * @title Eth Bonding Curve
  * @dev Eth backed Bonding curve contract
  */
-contract EthBondingCurve is BondingCurve {
+contract EthBondingCurve is Initializable, BondingCurve {
+
+  function initialize(uint256 _gasPrice) initializer public {
+    BondingCurve.initialize(_gasPrice);
+  }
+
   /**
    * @dev default function
    */
