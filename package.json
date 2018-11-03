@@ -22,6 +22,7 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
-    "openzeppelin-eth": "^2.0.2"
+    "openzeppelin-eth": "^2.0.2",
+    "zos-lib": "^2.0.1"
   }
 }

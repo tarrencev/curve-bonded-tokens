@@ -76,7 +76,7 @@ contract BondingCurve is ERC20, BancorFormula {
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
-    assert(gasPrice == 0 || tx.gasprice <= gasPrice);
+    assert(gasPrice == 0 wei || tx.gasprice <= gasPrice);
     _;
   }
 
