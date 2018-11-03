@@ -13,8 +13,6 @@ import "./BancorFormula.sol";
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
 contract BondingCurve is Initializable, ERC20, BancorFormula {
-  uint256 public poolBalance;
-
   /*
     reserve ratio, represented in ppm, 1-1000000
     1/3 corresponds to y= multiple * x^2
@@ -37,16 +35,18 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   event CurvedMint(address sender, uint256 amount, uint256 deposit);
   event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
 
-  function initialize(uint256 _gasPrice) initializer public {
+  function initialize(uint256 _poolBalance, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
+    poolBalance = _poolBalance;
+    reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
   }
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {
-    return calculatePurchaseReturn(totalSupply(), poolBalance, reserveRatio, amount);
+    return calculatePurchaseReturn(totalSupply(), poolBalance(), reserveRatio, amount);
   }
 
   function calculateCurvedBurnReturn(uint256 amount) public view returns (uint256) {
-    return calculateSaleReturn(totalSupply(), poolBalance, reserveRatio, amount);
+    return calculateSaleReturn(totalSupply(), poolBalance(), reserveRatio, amount);
   }
 
   /**
@@ -59,7 +59,6 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   function _curvedMintFor(address user, uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
     uint256 amount = calculateCurvedMintReturn(deposit);
     _mint(user, amount);
-    poolBalance = poolBalance.add(deposit);
     emit CurvedMint(user, amount, deposit);
     return amount;
   }
@@ -74,11 +73,24 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
 
   function _curvedBurnFor(address user, uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
     uint256 reimbursement = calculateCurvedBurnReturn(amount);
-    poolBalance = poolBalance.sub(reimbursement);
     _burn(user, amount);
     emit CurvedBurn(user, amount, reimbursement);
     return reimbursement;
   }
+
+  /**
+    @dev Allows the owner to update the gas price limit
+    @param _gasPrice The new gas price limit
+  */
+  function _setGasPrice(uint256 _gasPrice) internal {
+    require(_gasPrice > 0);
+    gasPrice = _gasPrice;
+  }
+
+  /**
+   * @dev Abstract method that returns pool balance
+   */
+  function poolBalance() external returns (uint256);
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
@@ -94,14 +106,5 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   modifier validMint(uint256 amount) {
     require(amount > 0);
     _;
-  }
-
-  /**
-    @dev Allows the owner to update the gas price limit
-    @param _gasPrice The new gas price limit
-  */
-  function _setGasPrice(uint256 _gasPrice) internal {
-    require(_gasPrice > 0);
-    gasPrice = _gasPrice;
   }
 }
