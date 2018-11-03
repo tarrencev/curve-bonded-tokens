@@ -35,8 +35,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   event CurvedMint(address sender, uint256 amount, uint256 deposit);
   event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
 
-  function initialize(uint256 _poolBalance, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
-    poolBalance = _poolBalance;
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
     reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
   }

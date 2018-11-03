@@ -14,8 +14,10 @@ contract ERC20BondingCurve is Initializable, BondingCurve {
   /* Reserve Token */
   ERC20 public reserveToken;
 
-  function initialize(uint32 _reserveRatio, uint256 _gasPrice) initializer public {
-    BondingCurve.initialize(_reserveRatio, _gasPrice);
+  function initialize(ERC20 _reserveToken, uint256 _initialPoolBalance, uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
+    reserveToken = _reserveToken;
+    require(reserveToken.transferFrom(msg.sender, this, _initialPoolBalance), "ERC20BondingCurve: Failed to transfer tokens for intial pool.");
+    BondingCurve.initialize(_initialSupply, _reserveRatio, _gasPrice);
   }
 
   /**

@@ -10,8 +10,9 @@ import "zos-lib/contracts/Initializable.sol";
 contract EthBondingCurve is Initializable, BondingCurve {
   uint256 private poolBalance_;
 
-  function initialize(uint32 _reserveRatio, uint256 _gasPrice) initializer public {
-    BondingCurve.initialize(msg.value, _reserveRatio, _gasPrice);
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
+    poolBalance_ = msg.value;
+    BondingCurve.initialize(_initialSupply, _reserveRatio, _gasPrice);
   }
 
   /**
