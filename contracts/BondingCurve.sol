@@ -38,6 +38,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
     reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
+    _mint(msg.sender, _initialSupply);
   }
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {

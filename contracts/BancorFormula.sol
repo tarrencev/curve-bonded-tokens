@@ -240,7 +240,11 @@ contract BancorFormula is Power {
     uint256 _depositAmount) public constant returns (uint256)
   {
     // validate input
-    require(_supply > 0 && _connectorBalance > 0 && _connectorWeight > 0 && _connectorWeight <= MAX_WEIGHT);
+    require(_supply > 0, "BancorFormula: Supply not > 0.");
+    require(_connectorBalance > 0, "BancorFormula: ConnectorBalance not > 0");
+    require(_connectorWeight > 0, "BancorFormula: Connector Weight not > 0");
+    require(_connectorWeight <= MAX_WEIGHT, "BancorFormula: Connector Weight not <= MAX_WEIGHT");
+
      // special case for 0 deposit amount
     if (_depositAmount == 0) {
       return 0;
@@ -279,7 +283,12 @@ contract BancorFormula is Power {
     uint256 _sellAmount) public constant returns (uint256)
   {
     // validate input
-    require(_supply > 0 && _connectorBalance > 0 && _connectorWeight > 0 && _connectorWeight <= MAX_WEIGHT && _sellAmount <= _supply);
+    require(_supply > 0, "BancorFormula: Supply not > 0.");
+    require(_connectorBalance > 0, "BancorFormula: ConnectorBalance not > 0");
+    require(_connectorWeight > 0, "BancorFormula: Connector Weight not > 0");
+    require(_connectorWeight <= MAX_WEIGHT, "BancorFormula: Connector Weight not <= MAX_WEIGHT");
+    require(_sellAmount <= _supply, "BancorFormula: Sell Amount not <= Supply");
+
      // special case for 0 sell amount
     if (_sellAmount == 0) {
       return 0;
