@@ -1,18 +1,18 @@
 pragma solidity ^0.4.24;
 
-import "./BondingCurve.sol";
+import "./BondingCurveToken.sol";
 import "zos-lib/contracts/Initializable.sol";
 
 /**
  * @title Eth Bonding Curve
  * @dev Eth backed Bonding curve contract
  */
-contract EthBondingCurve is Initializable, BondingCurve {
-  uint256 private poolBalance_;
+contract EthBondingCurveToken is Initializable, BondingCurveToken {
+  uint256 public poolBalance_;
 
-  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
     poolBalance_ = msg.value;
-    BondingCurve.initialize(_initialSupply, _reserveRatio, _gasPrice);
+    BondingCurveToken.initialize(_initialSupply, _reserveRatio, _gasPrice);
   }
 
   /**
@@ -42,7 +42,7 @@ contract EthBondingCurve is Initializable, BondingCurve {
     msg.sender.transfer(returnAmount);
   }
 
-  function poolBalance() public returns(uint256) {
+  function poolBalance() public view returns(uint256) {
     return poolBalance_;
   }
 }

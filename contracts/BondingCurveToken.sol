@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-eth/contracts/token/ERC20/ERC20Detailed.sol";
 import "zos-lib/contracts/Initializable.sol";
 
 import "./BancorFormula.sol";
@@ -12,7 +13,7 @@ import "./BancorFormula.sol";
  * https://github.com/bancorprotocol/contracts
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
-contract BondingCurve is Initializable, ERC20, BancorFormula {
+contract BondingCurveToken is Initializable, ERC20, ERC20Detailed, BancorFormula {
   /*
     reserve ratio, represented in ppm, 1-1000000
     1/3 corresponds to y= multiple * x^2
@@ -24,6 +25,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
     the owner to send ether to the contract and mint a given amount of tokens
   */
   uint32 public reserveRatio;
+  uint256 public scale = 10 ** 18;
 
   /*
     - Front-running attacks are currently mitigated by the following mechanisms:
@@ -32,21 +34,22 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   */
   uint256 public gasPrice = 0 wei; // maximum gas price for bancor transactions
 
-  event CurvedMint(address sender, uint256 amount, uint256 deposit);
-  event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
+  event CurvedMint(address sender, uint256 amount, uint256 deposit, uint256 price);
+  event CurvedBurn(address sender, uint256 amount, uint256 reimbursement, uint256 price);
 
-  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
+    ERC20Detailed.initialize("test", "TST", 18);
     reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
     _mint(msg.sender, _initialSupply);
   }
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {
-    return calculatePurchaseReturn(totalSupply(), poolBalance(), reserveRatio, amount);
+    return calculatePurchaseReturn(totalSupply(), poolBalance().div(scale), reserveRatio, amount.div(scale));
   }
 
   function calculateCurvedBurnReturn(uint256 amount) public view returns (uint256) {
-    return calculateSaleReturn(totalSupply(), poolBalance(), reserveRatio, amount);
+    return calculateSaleReturn(totalSupply(), poolBalance().div(scale), reserveRatio, amount).mul(scale);
   }
 
   /**
@@ -59,7 +62,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   function _curvedMintFor(address user, uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
     uint256 amount = calculateCurvedMintReturn(deposit);
     _mint(user, amount);
-    emit CurvedMint(user, amount, deposit);
+    emit CurvedMint(user, amount, deposit, deposit.div(amount.div(scale)));
     return amount;
   }
 
@@ -74,7 +77,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   function _curvedBurnFor(address user, uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
     uint256 reimbursement = calculateCurvedBurnReturn(amount);
     _burn(user, amount);
-    emit CurvedBurn(user, amount, reimbursement);
+    emit CurvedBurn(user, amount, reimbursement, reimbursement.div(amount.div(scale)));
     return reimbursement;
   }
 
@@ -90,7 +93,7 @@ contract BondingCurve is Initializable, ERC20, BancorFormula {
   /**
    * @dev Abstract method that returns pool balance
    */
-  function poolBalance() public returns (uint256);
+  function poolBalance() public view returns (uint256);
 
   // verifies that the gas price is lower than the universal limit
   modifier validGasPrice() {
