@@ -7,7 +7,7 @@ import "zos-lib/contracts/Initializable.sol";
  * @title Eth Bonding Curve
  * @dev Eth backed Bonding curve contract
  */
-contract EthBondingCurveToken is Initializable, BondingCurveToken {
+contract EthBondingToken is Initializable, BondingCurveToken {
   uint256 public poolBalance_;
 
   function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {

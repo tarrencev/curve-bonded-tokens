@@ -9,14 +9,14 @@ import "./BondingCurveToken.sol";
  * @title Token Bonding Curve
  * @dev Token backed Bonding curve contract
  */
-contract ERC20BondingCurveToken is Initializable, BondingCurveToken {
+contract ERC20BondingToken is Initializable, BondingCurveToken {
 
   /* Reserve Token */
   ERC20 public reserveToken;
 
   function initialize(ERC20 _reserveToken, uint256 _initialPoolBalance, uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public {
     reserveToken = _reserveToken;
-    require(reserveToken.transferFrom(msg.sender, this, _initialPoolBalance), "ERC20BondingCurveToken: Failed to transfer tokens for intial pool.");
+    require(reserveToken.transferFrom(msg.sender, this, _initialPoolBalance), "ERC20BondingToken: Failed to transfer tokens for intial pool.");
     BondingCurveToken.initialize(_initialSupply, _reserveRatio, _gasPrice);
   }
 

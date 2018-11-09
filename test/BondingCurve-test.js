@@ -4,9 +4,9 @@
 const Web3Utils = require("web3-utils");
 
 const Token = artifacts.require("TestToken.sol");
-const ERC20BondingCurveToken = artifacts.require("ERC20BondingCurveToken.sol");
+const ERC20BondingToken = artifacts.require("ERC20BondingToken.sol");
 
-contract("ERC20BondingCurveToken", accounts => {
+contract("ERC20BondingToken", accounts => {
   const [hodler1, hodler2] = accounts;
   describe("Test User stories", () => {
     it("Should query the price of drops at different supply", async () => {
@@ -20,7 +20,7 @@ contract("ERC20BondingCurveToken", accounts => {
         [],
         []
       );
-      const bonding = await ERC20BondingCurveToken.new();
+      const bonding = await ERC20BondingToken.new();
       await token.approve(bonding.address, Web3Utils.toWei("1000000000"));
       await bonding.initialize(
         token.address,
@@ -71,7 +71,7 @@ contract("ERC20BondingCurveToken", accounts => {
 
       await token.transfer(hodler2, Web3Utils.toWei("500000000"));
 
-      const bonding = await ERC20BondingCurveToken.deployed();
+      const bonding = await ERC20BondingToken.deployed();
 
       await token.approve(bonding.address, Web3Utils.toWei("1000000000"));
       await token.approve(bonding.address, Web3Utils.toWei("1000000000"), {
