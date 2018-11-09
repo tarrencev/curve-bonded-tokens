@@ -14,7 +14,6 @@ contract("EthBondingToken", accounts => {
       await bonding.initialize(
         Web3Utils.toWei("100000"),
         150000,
-        8,
         Web3Utils.toWei("20", "gwei"),
         { value: Web3Utils.toWei("0.1") }
       );
@@ -52,7 +51,6 @@ contract("EthBondingToken", accounts => {
       await bonding.initialize(
         Web3Utils.toWei("1000"),
         150000,
-        8,
         Web3Utils.toWei("20", "gwei"),
         { value: Web3Utils.toWei("0.01") }
       );

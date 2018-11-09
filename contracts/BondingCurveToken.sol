@@ -25,7 +25,6 @@ contract BondingCurveToken is Initializable, ERC20, BancorFormula {
     the owner to send ether to the contract and mint a given amount of tokens
   */
   uint32 public reserveRatio;
-  uint256 public scale;
 
   /*
     - Front-running attacks are currently mitigated by the following mechanisms:
@@ -37,8 +36,7 @@ contract BondingCurveToken is Initializable, ERC20, BancorFormula {
   event CurvedMint(address sender, uint256 amount, uint256 deposit);
   event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
 
-  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint8 _scale, uint256 _gasPrice) initializer public payable {
-    scale = 10 ** uint(_scale);
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
     reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
     _mint(msg.sender, _initialSupply);

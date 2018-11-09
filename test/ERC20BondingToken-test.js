@@ -27,7 +27,6 @@ contract("ERC20BondingToken", accounts => {
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
         150000,
-        8,
         Web3Utils.toWei("20", "gwei")
       );
 
@@ -82,7 +81,6 @@ contract("ERC20BondingToken", accounts => {
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
         150000,
-        8,
         Web3Utils.toWei("20", "gwei")
       );
 
