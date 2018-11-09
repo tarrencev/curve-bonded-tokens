@@ -23,13 +23,11 @@ contract("ERC20BondingToken", accounts => {
       const bonding = await ERC20BondingToken.new();
       await token.approve(bonding.address, Web3Utils.toWei("1000000000"));
       await bonding.initialize(
-        "TestBonding",
-        "TB",
-        18,
         token.address,
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
         150000,
+        8,
         Web3Utils.toWei("20", "gwei")
       );
 
@@ -43,14 +41,13 @@ contract("ERC20BondingToken", accounts => {
         supply = Web3Utils.fromWei(supply.toString());
 
         console.log(
-          "[" +
-            i +
-            "] bonding token supply: " +
-            supply +
-            " with price: " +
-            Web3Utils.fromWei(receipt.logs[2].args.price.toString()) +
-            " reserve tokens per bonding token"
+          `[${i}: Minting ${Web3Utils.fromWei(
+            receipt.logs[2].args.amount
+          )} tokens in exchange for ${Web3Utils.fromWei(
+            receipt.logs[2].args.deposit
+          )} reserve tokens`
         );
+
         if (supply > supply_range) {
           break;
         }
@@ -81,16 +78,13 @@ contract("ERC20BondingToken", accounts => {
         from: hodler2
       });
       await bonding.initialize(
-        "TestBonding",
-        "TB",
-        18,
         token.address,
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
         150000,
+        8,
         Web3Utils.toWei("20", "gwei")
       );
-      const scale = 1e18;
 
       const bal1 = await token.balanceOf.call(hodler1);
       console.log(
@@ -99,10 +93,13 @@ contract("ERC20BondingToken", accounts => {
 
       const ntokens = Web3Utils.toWei("10");
       let tx = await bonding.mint(ntokens, { from: hodler1 });
+
       console.log(
-        "user[0] mint bonded tokens at effective price: " +
-          Web3Utils.fromWei(tx.logs[2].args.price.toString()) +
-          " tokens per bonded token"
+        `User[0] minted ${Web3Utils.fromWei(
+          tx.logs[2].args.amount
+        )} tokens in exchange for ${Web3Utils.fromWei(
+          tx.logs[2].args.deposit
+        )} reserve tokens`
       );
       const bal2 = await token.balanceOf.call(hodler1);
       console.log(
@@ -120,15 +117,19 @@ contract("ERC20BondingToken", accounts => {
 
       tx = await bonding.mint(ntokens, { from: hodler2 });
       console.log(
-        "user[1] mint bonded tokens at effective price: " +
-          Web3Utils.fromWei(tx.logs[2].args.price.toString()) +
-          " tokens per bonded token"
+        `User[1] minted ${Web3Utils.fromWei(
+          tx.logs[2].args.amount
+        )} tokens in exchange for ${Web3Utils.fromWei(
+          tx.logs[2].args.deposit
+        )} reserve tokens`
       );
       tx = await bonding.burn(bondingBalance1, { from: hodler1 });
       console.log(
-        "user[0] burn reserve tokens at effective price: " +
-          Web3Utils.fromWei(tx.logs[1].args.price.toString()) +
-          " token per bonded tokens"
+        `User[1] burnt ${Web3Utils.fromWei(
+          tx.logs[1].args.amount
+        )} tokens in exchange for ${Web3Utils.fromWei(
+          tx.logs[1].args.reimbursement
+        )} reserve tokens`
       );
       const bondingBalance2 = await bonding.balanceOf.call(hodler2);
       console.log(
@@ -139,16 +140,18 @@ contract("ERC20BondingToken", accounts => {
 
       tx = await bonding.burn(bondingBalance2.valueOf(), { from: hodler2 });
       console.log(
-        "user[0] sell drops at effective price: " +
-          Web3Utils.fromWei(tx.logs[1].args.price.toString()) +
-          " token per drop"
+        `User[0] burnt ${Web3Utils.fromWei(
+          tx.logs[1].args.amount
+        )} tokens in exchange for ${Web3Utils.fromWei(
+          tx.logs[1].args.reimbursement
+        )} reserve tokens`
       );
 
       const tokenBalance1 = await token.balanceOf.call(hodler1);
       console.log(
         `user[0] balance of tokens: ${Web3Utils.fromWei(
           tokenBalance1.toString()
-        )} (5 tokens as profit)`
+        )}`
       );
     });
   });

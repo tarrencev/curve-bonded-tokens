@@ -13,7 +13,7 @@ import "./BancorFormula.sol";
  * https://github.com/bancorprotocol/contracts
  * https://github.com/ConsenSys/curationmarkets/blob/master/CurationMarkets.sol
  */
-contract BondingCurveToken is Initializable, ERC20, ERC20Detailed, BancorFormula {
+contract BondingCurveToken is Initializable, ERC20, BancorFormula {
   /*
     reserve ratio, represented in ppm, 1-1000000
     1/3 corresponds to y= multiple * x^2
@@ -34,12 +34,11 @@ contract BondingCurveToken is Initializable, ERC20, ERC20Detailed, BancorFormula
   */
   uint256 public gasPrice = 0 wei; // maximum gas price for bancor transactions
 
-  event CurvedMint(address sender, uint256 amount, uint256 deposit, uint256 price);
-  event CurvedBurn(address sender, uint256 amount, uint256 reimbursement, uint256 price);
+  event CurvedMint(address sender, uint256 amount, uint256 deposit);
+  event CurvedBurn(address sender, uint256 amount, uint256 reimbursement);
 
-  function initialize(string _name, string _symbol, uint8 _decimals, uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
-    ERC20Detailed.initialize(_name, _symbol, _decimals);
-    scale = 10 ** uint(_decimals);
+  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint8 _scale, uint256 _gasPrice) initializer public payable {
+    scale = 10 ** uint(_scale);
     reserveRatio = _reserveRatio;
     gasPrice = _gasPrice;
     _mint(msg.sender, _initialSupply);
@@ -63,7 +62,7 @@ contract BondingCurveToken is Initializable, ERC20, ERC20Detailed, BancorFormula
   function _curvedMintFor(address user, uint256 deposit) validGasPrice validMint(deposit) internal returns (uint256) {
     uint256 amount = calculateCurvedMintReturn(deposit);
     _mint(user, amount);
-    emit CurvedMint(user, amount, deposit, deposit.div(amount.div(scale)));
+    emit CurvedMint(user, amount, deposit);
     return amount;
   }
 
@@ -78,7 +77,7 @@ contract BondingCurveToken is Initializable, ERC20, ERC20Detailed, BancorFormula
   function _curvedBurnFor(address user, uint256 amount) validGasPrice validBurn(amount) internal returns (uint256) {
     uint256 reimbursement = calculateCurvedBurnReturn(amount);
     _burn(user, amount);
-    emit CurvedBurn(user, amount, reimbursement, reimbursement.div(amount.div(scale)));
+    emit CurvedBurn(user, amount, reimbursement);
     return reimbursement;
   }
 
