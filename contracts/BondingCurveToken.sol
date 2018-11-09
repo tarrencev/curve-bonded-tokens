@@ -45,11 +45,11 @@ contract BondingCurveToken is Initializable, ERC20, BancorFormula {
   }
 
   function calculateCurvedMintReturn(uint256 amount) public view returns (uint256) {
-    return calculatePurchaseReturn(totalSupply(), poolBalance().div(scale), reserveRatio, amount.div(scale));
+    return calculatePurchaseReturn(totalSupply(), poolBalance(), reserveRatio, amount);
   }
 
   function calculateCurvedBurnReturn(uint256 amount) public view returns (uint256) {
-    return calculateSaleReturn(totalSupply(), poolBalance().div(scale), reserveRatio, amount).mul(scale);
+    return calculateSaleReturn(totalSupply(), poolBalance(), reserveRatio, amount);
   }
 
   /**

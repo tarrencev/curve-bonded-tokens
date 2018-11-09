@@ -12,11 +12,11 @@ contract("EthBondingToken", accounts => {
     it("Should query the price of drops at different supply", async () => {
       const bonding = await EthBondingToken.new();
       await bonding.initialize(
-        Web3Utils.toWei("1000"),
+        Web3Utils.toWei("100000"),
         150000,
         8,
         Web3Utils.toWei("20", "gwei"),
-        { value: Web3Utils.toWei("0.01") }
+        { value: Web3Utils.toWei("0.1") }
       );
 
       let i;
@@ -25,7 +25,7 @@ contract("EthBondingToken", accounts => {
       const supply_range = 1;
 
       for (i = 0; i < 100000; i++) {
-        receipt = await bonding.mint({ value: Web3Utils.toWei("0.001") });
+        receipt = await bonding.mint({ value: Web3Utils.toWei("0.01") });
 
         supply = await bonding.poolBalance();
         supply = Web3Utils.fromWei(supply.toString());
