@@ -10,9 +10,9 @@ import "zos-lib/contracts/Initializable.sol";
 contract EthBondingToken is Initializable, BondingCurveToken {
   uint256 public poolBalance_;
 
-  function initialize(uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
+  function initialize(string _name, string _symbol, uint8 _decimals, uint256 _initialSupply, uint32 _reserveRatio, uint256 _gasPrice) initializer public payable {
     poolBalance_ = msg.value;
-    BondingCurveToken.initialize(_initialSupply, _reserveRatio, _gasPrice);
+    BondingCurveToken.initialize(_name, _symbol, _decimals, _initialSupply, _reserveRatio, _gasPrice);
   }
 
   /**

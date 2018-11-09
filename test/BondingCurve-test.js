@@ -23,6 +23,9 @@ contract("ERC20BondingToken", accounts => {
       const bonding = await ERC20BondingToken.new();
       await token.approve(bonding.address, Web3Utils.toWei("1000000000"));
       await bonding.initialize(
+        "TestBonding",
+        "TB",
+        18,
         token.address,
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
@@ -78,6 +81,9 @@ contract("ERC20BondingToken", accounts => {
         from: hodler2
       });
       await bonding.initialize(
+        "TestBonding",
+        "TB",
+        18,
         token.address,
         Web3Utils.toWei("1"),
         Web3Utils.toWei("1000000"),
