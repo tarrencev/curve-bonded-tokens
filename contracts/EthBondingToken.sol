@@ -16,18 +16,11 @@ contract EthBondingToken is Initializable, BondingCurveToken {
   }
 
   /**
-   * @dev default function
-   */
-  function() public payable {
-    mint();
-  }
-
-  /**
    * @dev Mint tokens
    */
-  function mint() public payable {
+  function _curvedMint() internal returns (uint256) {
     require(msg.value > 0);
-    _curvedMint(msg.value);
+    super._curvedMint(msg.value);
     poolBalance_ = poolBalance_.add(msg.value);
   }
 
@@ -36,8 +29,8 @@ contract EthBondingToken is Initializable, BondingCurveToken {
    *
    * @param amount Amount of tokens to burn
    */
-  function burn(uint256 amount) public {
-    uint256 returnAmount = _curvedBurn(amount);
+  function _curvedBurn(uint256 amount) internal returns (uint256) {
+    uint256 returnAmount = super._curvedBurn(amount);
     poolBalance_ = poolBalance_.sub(returnAmount);
     msg.sender.transfer(returnAmount);
   }

@@ -4,13 +4,13 @@
 const Web3Utils = require("web3-utils");
 
 const Token = artifacts.require("TestToken.sol");
-const EthBondingToken = artifacts.require("EthBondingToken.sol");
+const TestEthBondingToken = artifacts.require("TestEthBondingToken.sol");
 
 contract("EthBondingToken", accounts => {
   const [hodler1, hodler2] = accounts;
   describe("Test User stories", () => {
     it("Should query the price of drops at different supply", async () => {
-      const bonding = await EthBondingToken.new();
+      const bonding = await TestEthBondingToken.new();
       await bonding.initialize(
         Web3Utils.toWei("100000"),
         150000,
@@ -47,7 +47,7 @@ contract("EthBondingToken", accounts => {
     });
 
     it("Should walk through typical user story", async () => {
-      const bonding = await EthBondingToken.new();
+      const bonding = await TestEthBondingToken.new();
       await bonding.initialize(
         Web3Utils.toWei("1000"),
         150000,
@@ -124,7 +124,7 @@ contract("EthBondingToken", accounts => {
 
   describe("Edge cases", () => {
     it("Buy then sell 1eth of tokens", async () => {
-      const bonding = await EthBondingToken.new();
+      const bonding = await TestEthBondingToken.new();
       await bonding.initialize(
         Web3Utils.toWei("100000"),
         150000,

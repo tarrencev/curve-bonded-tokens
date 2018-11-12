@@ -25,9 +25,9 @@ contract ERC20BondingToken is Initializable, BondingCurveToken {
    *
    * @param amount Amount of tokens to deposit
    */
-  function mint(uint256 amount) public {
+  function _curvedMint(uint256 amount) internal returns (uint256) {
     require(reserveToken.transferFrom(msg.sender, this, amount));
-    _curvedMint(amount);
+    super._curvedMint(amount);
   }
 
   /**
@@ -35,8 +35,8 @@ contract ERC20BondingToken is Initializable, BondingCurveToken {
    *
    * @param amount Amount of tokens to burn
    */
-  function burn(uint256 amount) public {
-    uint256 reimbursement = _curvedBurn(amount);
+  function _curvedBurn(uint256 amount) internal returns (uint256) {
+    uint256 reimbursement = super._curvedBurn(amount);
     reserveToken.transfer(msg.sender, reimbursement);
   }
 
