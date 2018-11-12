@@ -12,7 +12,7 @@ Curve Bonded tokens based on the Bancor Formula and OpenZeppelin contracts
 
 Eth-backed bonded token:
 
-```
+```Solidity
 pragma solidity ^0.4.24;
 
 import "curve-bonded-tokens/contracts/EthBondingToken.sol";
@@ -30,7 +30,7 @@ contract Token is EthBondingToken {
 
 ERC20-backed bonded token:
 
-```
+```Solidity
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
