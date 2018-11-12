@@ -43,12 +43,6 @@ contract Token is ERC20BondingToken {
   uint256 public constant GAS_PRICE = 50 * (10 ** 10);
 
   constructor(ERC20 _reserveToken) public {
-    reserveToken = _reserveToken;
-    reserveRatio = CURVE_RATIO;
-    _mint(msg.sender, INITIAL_SUPPLY);
-    poolBalance = INITAL_BALANCE;
-    gasPrice = 50 * (10 ** 10);
-
     ERC20BondingToken.initialize(
       _reserveToken,
       INITIAL_POOL_BALANCE,
