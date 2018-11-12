@@ -10,41 +10,37 @@ Curve Bonded tokens based on the Bancor Formula and OpenZeppelin contracts
 
 ### Usage
 
-Eth-backed curve bonded token:
+Eth-backed bonded token:
 
 ```
 pragma solidity ^0.4.24;
 
-import "curve-bonded-tokens/contracts/EthBondingCurve.sol";
+import "curve-bonded-tokens/contracts/EthBondingToken.sol";
 
-contract Token is EthBondingCurve {
-  uint256 public constant INITIAL_SUPPLY = 2000000 * (10 ** 18);
-  uint256 public constant INITIAL_PRICE = 39 * (10 ** 13);
-  uint32 public constant CURVE_RATIO = 150000;
-  uint256 public constant INITAL_BALANCE = CURVE_RATIO * INITIAL_SUPPLY * INITIAL_PRICE / (1000000 * 10 ** 18);
+contract Token is EthBondingToken {
+  uint256 public constant INITIAL_SUPPLY = 1000000 * (10 ** 18);
+  uint32 public constant RESERVE_RATIO = 150000;
+  uint256 public constant GAS_PRICE = 50 * (10 ** 10);
 
   constructor() public {
-    reserveRatio = CURVE_RATIO;
-    _mint(msg.sender, INITIAL_SUPPLY);
-    poolBalance = INITAL_BALANCE;
-    gasPrice = 50 * (10 ** 10);
+    EthBondingToken.initialize(INITIAL_SUPPLY, RESERVE_RATIO, _gasPrice);
   }
 }
 ```
 
-ERC20-backed curve bonded token:
+ERC20-backed bonded token:
 
 ```
 pragma solidity ^0.4.24;
 
 import "openzeppelin-eth/contracts/token/ERC20/ERC20.sol";
-import "curve-bonded-tokens/contracts/ERC20BondingCurve.sol";
+import "curve-bonded-tokens/contracts/ERC20BondingToken.sol";
 
-contract Token is ERC20BondingCurve {
-  uint256 public constant INITIAL_SUPPLY = 2000000 * (10 ** 18);
-  uint256 public constant INITIAL_PRICE = 39 * (10 ** 13);
-  uint32 public constant CURVE_RATIO = 150000;
-  uint256 public constant INITAL_BALANCE = CURVE_RATIO * INITIAL_SUPPLY * INITIAL_PRICE / (1000000 * 10 ** 18);
+contract Token is ERC20BondingToken {
+  uint256 public constant INITIAL_POOL_BALANCE = 1 * (10 ** 18);
+  uint256 public constant INITIAL_SUPPLY = 1000000 * (10 ** 18);
+  uint32 public constant RESERVE_RATIO = 150000;
+  uint256 public constant GAS_PRICE = 50 * (10 ** 10);
 
   constructor(ERC20 _reserveToken) public {
     reserveToken = _reserveToken;
@@ -52,6 +48,14 @@ contract Token is ERC20BondingCurve {
     _mint(msg.sender, INITIAL_SUPPLY);
     poolBalance = INITAL_BALANCE;
     gasPrice = 50 * (10 ** 10);
+
+    ERC20BondingToken.initialize(
+      _reserveToken,
+      INITIAL_POOL_BALANCE,
+      INITIAL_SUPPLY,
+      RESERVE_RATIO,
+      GAS_PRICE
+    );
   }
 }
 ```

@@ -121,4 +121,16 @@ contract("EthBondingToken", accounts => {
       );
     });
   });
+
+  describe("Edge cases", () => {
+    it("Buy then sell 1eth of tokens", async () => {
+      const bonding = await EthBondingToken.new();
+      await bonding.initialize(
+        Web3Utils.toWei("100000"),
+        150000,
+        Web3Utils.toWei("20", "gwei"),
+        { value: Web3Utils.toWei("0.1") }
+      );
+    });
+  });
 });
