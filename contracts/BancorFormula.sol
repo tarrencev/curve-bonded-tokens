@@ -237,7 +237,7 @@ contract BancorFormula is Power {
     uint256 _supply,
     uint256 _connectorBalance,
     uint32 _connectorWeight,
-    uint256 _depositAmount) public constant returns (uint256)
+    uint256 _depositAmount) public view returns (uint256)
   {
     // validate input
     require(_supply > 0, "BancorFormula: Supply not > 0.");
@@ -280,7 +280,7 @@ contract BancorFormula is Power {
     uint256 _supply,
     uint256 _connectorBalance,
     uint32 _connectorWeight,
-    uint256 _sellAmount) public constant returns (uint256)
+    uint256 _sellAmount) public view returns (uint256)
   {
     // validate input
     require(_supply > 0, "BancorFormula: Supply not > 0.");
