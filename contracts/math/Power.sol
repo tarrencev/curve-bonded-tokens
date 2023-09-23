@@ -76,7 +76,7 @@ worldwide, non-exclusive, no-charge, royalty-free, irrevocable
 (except as stated in this section) patent license to make, have made,
 use, offer to sell, sell, import, and otherwise transfer the Work,
 where such license applies only to those patent claims licensable
-by such Contributor that are necessarily infringed by their
+by such Contributors that are necessarily infringed by their
 Contribution(s) alone or by combination of their Contribution(s)
 with the Work to which such Contribution(s) was submitted. If You
 institute patent litigation against any entity (including a
@@ -424,7 +424,7 @@ contract Power {
       This functions assumes that "x >= FIXED_1", because the output would be negative otherwise.
   */
   function generalLog(uint256 _x) internal pure returns (uint256) {
-    uint256 res = 0;
+    uint256 res;
     uint256 x = _x;
 
     // If x >= 2, then we compute the integer part of log2(x), which is larger than 0.
@@ -452,7 +452,7 @@ contract Power {
     Compute the largest integer smaller than or equal to the binary logarithm of the input.
   */
   function floorLog2(uint256 _n) internal pure returns (uint8) {
-    uint8 res = 0;
+    uint8 res;
     uint256 n = _n;
 
     if (n < 256) {
@@ -512,7 +512,7 @@ contract Power {
    */
    function generalExp(uint256 _x, uint8 _precision) internal pure returns (uint256) {
        uint256 xi = _x;
-       uint256 res = 0;
+       uint256 res;
 
        xi = (xi * _x) >> _precision; res += xi * 0x3442c4e6074a82f1797f72ac0000000; // add x^02 * (33! / 02!)
        xi = (xi * _x) >> _precision; res += xi * 0x116b96f757c380fb287fd0e40000000; // add x^03 * (33! / 03!)
@@ -556,7 +556,7 @@ contract Power {
        Auto-generated via 'PrintFunctionOptimalLog.py'
    */
    function optimalLog(uint256 x) internal pure returns (uint256) {
-       uint256 res = 0;
+       uint256 res;
 
        uint256 y;
        uint256 z;
@@ -591,7 +591,7 @@ contract Power {
        Auto-generated via 'PrintFunctionOptimalExp.py'
    */
    function optimalExp(uint256 x) internal pure returns (uint256) {
-       uint256 res = 0;
+       uint256 res;
 
        uint256 y;
        uint256 z;
